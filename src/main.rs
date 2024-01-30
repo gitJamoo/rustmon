@@ -41,9 +41,11 @@ enum Event<I> {
 struct Pet {
     id: usize,
     name: String,
-    category: String,
-    age: usize,
+    typing: String,
+    level: usize,
     created_at: DateTime<Utc>,
+    front_img: String,
+    back_img: String,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -271,8 +273,8 @@ fn render_pets<'a>(pet_list_state: &ListState) -> (List<'a>, Table<'a>) {
     let pet_detail = Table::new(vec![Row::new(vec![
         Cell::from(Span::raw(selected_pet.id.to_string())),
         Cell::from(Span::raw(selected_pet.name)),
-        Cell::from(Span::raw(selected_pet.category)),
-        Cell::from(Span::raw(selected_pet.age.to_string())),
+        Cell::from(Span::raw(selected_pet.typing)),
+        Cell::from(Span::raw(selected_pet.level.to_string())),
         Cell::from(Span::raw(selected_pet.created_at.to_string())),
     ])])
     .header(Row::new(vec![
@@ -285,11 +287,11 @@ fn render_pets<'a>(pet_list_state: &ListState) -> (List<'a>, Table<'a>) {
             Style::default().add_modifier(Modifier::BOLD),
         )),
         Cell::from(Span::styled(
-            "Category",
+            "Typing",
             Style::default().add_modifier(Modifier::BOLD),
         )),
         Cell::from(Span::styled(
-            "Age",
+            "Level",
             Style::default().add_modifier(Modifier::BOLD),
         )),
         Cell::from(Span::styled(
@@ -333,9 +335,11 @@ fn add_random_pet_to_db() -> Result<Vec<Pet>, Error> {
     let random_pet = Pet {
         id: rng.gen_range(0, 9999999),
         name: rng.sample_iter(Alphanumeric).take(10).collect(),
-        category: catsdogs.to_owned(),
-        age: rng.gen_range(1, 15),
+        typing: "NULL".to_string(),
+        level: rng.gen_range(1, 100), // be less common the higher its level?
         created_at: Utc::now(),
+        front_img: "test".to_string(),
+        back_img: "test".to_string(),
     };
 
     parsed.push(random_pet);
